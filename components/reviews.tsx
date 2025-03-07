@@ -21,8 +21,8 @@ export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
                                     <p className="text-gray-500">{new Date(pr.createdAt).toLocaleString()}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`}><h1 className={`${title()} text-primary underline`}>{`#${pr.pullId}`}</h1></Link>
+                            <div className="flex items-start gap-4">
+                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`}><h1 className={`${title()} text-green-600`}>{`#${pr.pullId}`}</h1></Link>
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-4"><Chip color='default' size="sm">{pr?.metadata?.base}</Chip><ArrowLeft size={16} /><Chip color='default' size="sm">{pr?.metadata?.head}</Chip></div>
                                     <div className="flex items-center gap-4"><Chip color={pr.status === "CLOSED" ? "danger" : "primary"} size="sm">{pr.status}</Chip> by <strong>{pr?.metadata?.merged_by?.login}</strong></div>
