@@ -54,6 +54,11 @@ export async function POST(req: Request) {
                         description: pull_request.body || "",
                         updatedAt: new Date(),
                         pullId: pull_request.number,
+                        metadata:{
+                            head: pull_request.head.ref,
+                            base: pull_request.base.ref,
+                            merged_by: pull_request?.merged_by
+                        }
                     },
                     create: {
                         githubPRId: pull_request.id.toString(),
@@ -63,10 +68,14 @@ export async function POST(req: Request) {
                         repositoryId: repo.id,
                         userId: user.id,
                         pullId: pull_request.number,
+                        metadata:{
+                            head: pull_request.head.ref,
+                            base: pull_request.base.ref,
+                            merged_by: pull_request?.merged_by
+                        },
                         createdAt: new Date(),
                     },
                 });
-
 
                 const PRID = pullReqData.id;
 

@@ -116,6 +116,7 @@ model PullRequest {
   description  String?
   pullId       Int?
   status       PRStatus   @default(OPEN) // OPEN, CLOSED, MERGED
+  metadata     Json?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
