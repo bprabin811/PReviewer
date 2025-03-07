@@ -16,9 +16,9 @@ import { redirect, useParams } from "next/navigation";
 
 export default function RepoDetails() {
     const { data: session } = useSession();
-    if (!session) {
-        redirect("/");
-    }
+    // if (!session) {
+    //     redirect("/");
+    // }
 
     const { repoId } = useParams();
 
@@ -48,6 +48,9 @@ export default function RepoDetails() {
         },
         enabled: !!repoId,
     });
+
+    const LoggedInUser = repo?.users?.find((user: any) => user?.user?.email === session?.user?.email);
+
 
     return (
         <>
@@ -80,10 +83,12 @@ export default function RepoDetails() {
                         <Tab key="review" title="AI Reviews" className="py-0">
                             <ReviewPage pullRequests={pr} />
                         </Tab>
-                        <Tab key="logs" title="Logs" className="py-0">
+                        {LoggedInUser?.permissions?.view_logs ? <Tab key="logs" title="Logs" className="py-0">
                             <LogPage logs={logs} />
-                        </Tab>
+                        </Tab> : null}
                     </Tabs>
+
+
                 </>
             )}
         </>

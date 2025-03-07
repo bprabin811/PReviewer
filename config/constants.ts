@@ -9,3 +9,8 @@ export const constants={
     "PR_APPROVED": "PR has been approved",
     "CREATE": "AI review has been created",
 }
+
+export const PERMISSIONS={
+    "view_logs": "View Logs",
+    "user_management": "User Management",
+    "view_ai_reviews": "View AI Reviews",}

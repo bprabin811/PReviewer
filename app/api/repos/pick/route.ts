@@ -48,7 +48,7 @@ export async function POST(req: Request): Promise<Response> {
           create: {
             userId: userId, // Correctly assigning userId
             role: "ADMIN", // Assign user as ADMIN
-            permissions: { manage: true }, // Full permissions
+            permissions: { view_logs: true, user_management: true, view_ai_reviews: true }, // Full permissions
           },
         },
       },

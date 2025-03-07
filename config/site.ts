@@ -24,7 +24,7 @@ export const siteConfig = {
     }
   ],
   links: {
-    github: "https://github.com/bprabin811",
+    github: "https://github.com/bprabin811/PReviewer",
     twitter: "https://twitter.com/",
   },
 };

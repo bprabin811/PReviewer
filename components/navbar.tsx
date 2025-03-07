@@ -24,7 +24,7 @@ import {
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Avatar } from "@heroui/avatar";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, Star } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export const Navbar = () => {
@@ -61,12 +61,11 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
-          {/* <Link isExternal aria-label="Twitter" href={siteConfig.links.twitter}>
-            <TwitterIcon className="text-default-500" />
-          </Link> */}
+        <NavbarItem className="hidden sm:flex gap-4">
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <GithubIcon className="text-default-500" />
+            <Button size="md" variant="bordered" className="rounded-full">
+            <Star className="text-default-500" size={16}/> Github
+            </Button>
           </Link>
           <ThemeSwitch />
         </NavbarItem>

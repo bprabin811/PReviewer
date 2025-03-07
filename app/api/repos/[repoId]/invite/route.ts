@@ -10,7 +10,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ repoId:
         }
 
         const { repoId } = await params;
-        const { email, role } = await req.json();
+        const { email, role, permissions } = await req.json();
 
         if (!email || !role) {
             return new Response(JSON.stringify({ error: "Email and role are required" }), { status: 400 });
@@ -55,18 +55,18 @@ export async function POST(req: Request, { params }: { params: Promise<{ repoId:
                 repositoryId: repoId,
                 role,
                 invitedBy: admin.id,
-                permissions: { viewLogs: true }, // Default permissions
+                permissions,
             },
         });
 
         await prisma.log.create({
             data: {
-              action: "USER_INVITED",
-              userId: invitedUser.id,
-              repositoryId: repo.id,
-              details: { repoName: repo.name },
+                action: "USER_INVITED",
+                userId: invitedUser.id,
+                repositoryId: repo.id,
+                details: { repoName: repo.name },
             },
-          });
+        });
 
         return new Response(JSON.stringify({ message: "User invited successfully" }), { status: 200 });
 

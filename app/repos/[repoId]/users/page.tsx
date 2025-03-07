@@ -8,17 +8,28 @@ import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Avatar } from "@heroui/avatar";
+import { Select, SelectItem } from "@heroui/select";
+import { Input } from "@heroui/input";
+import { Button } from "@heroui/button";
+import { Checkbox } from "@heroui/checkbox";
+import { addToast } from "@heroui/toast";
+import { PERMISSIONS } from "@/config/constants";
 
 export default function ManageUsers() {
     const { data: session } = useSession();
-    if (!session) {
-        redirect("/");
-    }
+    // if (!session) {
+    //     redirect("/");
+    // }
 
     const { repoId } = useParams();
     const queryClient = useQueryClient();
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("VIEWER");
+    const [permissions, setPermissions] = useState({
+        view_logs: false,
+        view_ai_reviews: true,
+        user_management: false,
+    });
 
     const { data: users, isLoading: loadingUsers, error } = useQuery({
         queryKey: ["repoUsers", repoId],
@@ -31,12 +42,24 @@ export default function ManageUsers() {
 
     const inviteUserMutation = useMutation({
         mutationFn: async () => {
-            await axios.post(`/api/repos/${repoId}/invite`, { email, role });
+            await axios.post(`/api/repos/${repoId}/invite`, { email, role, permissions });
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["repoUsers", repoId] });
             setEmail("");
+            addToast({
+                title: "Invited",
+                description: "User invited successfully.",
+                color: 'success',
+            });
         },
+        onError: () => {
+            addToast({
+                title: "Failed",
+                description: "Failed to invite user.",
+                color: 'danger',
+            });
+        }
     });
 
     const removeUserMutation = useMutation({
@@ -48,36 +71,67 @@ export default function ManageUsers() {
         },
     });
 
+    const roles = [
+        { key: "VIEWER", label: "Viewer" },
+        { key: "CONTRIBUTOR", label: "Contributor" },
+    ]
+
+    const LoggedInUser = users?.find((user: any) => user.user.email === session?.user?.email);
+
+
     return (
         <>
             <h1 className={title()}>Manage Users</h1>
             {error && <p className="text-red-500">{error.message}</p>}
             {/* Invite User */}
-            <div className="mb-4 p-4 border border-default rounded-lg">
-                <h3 className="font-semibold mb-2">Invite a User</h3>
-                <input
-                    type="email"
-                    placeholder="User email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border border-default p-2 rounded w-full mb-2"
-                />
-                <select value={role} onChange={(e) => setRole(e.target.value)} className="border border-default p-2 rounded w-full mb-2">
-                    <option value="VIEWER">Viewer</option>
-                    <option value="CONTRIBUTOR">Contributor</option>
-                    <option value="ADMIN">Admin</option>
-                </select>
-                <button
+            {LoggedInUser?.permissions?.user_management ? <div className="space-y-4 border border-default rounded-lg p-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <Input
+                        type="email"
+                        label="User email"
+                        placeholder="User email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="max-w-xs"
+                    />
+
+                    <Select
+                        className="max-w-xs"
+                        defaultSelectedKeys={["VIEWER"]}
+                        label="Select role"
+                        placeholder="Select a role"
+                        onChange={(e) => setRole(e.target.value)}
+                    >
+                        {roles.map((role) => (
+                            <SelectItem key={role.key}>{role.label}</SelectItem>
+                        ))}
+                    </Select>
+                </div>
+
+                {/* permissions */}
+                <h3>Permissions</h3>
+                <div className="flex items-start gap-4 flex-col">
+                    <Checkbox isSelected={permissions.user_management} onChange={() => {
+                        setPermissions({ ...permissions, user_management: !permissions.user_management })
+                    }}>User Management</Checkbox>
+                    <Checkbox isSelected={permissions.view_ai_reviews} isDisabled>View AI Reviews</Checkbox>
+                    <Checkbox isSelected={permissions.view_logs} onChange={() => {
+                        setPermissions({ ...permissions, view_logs: !permissions.view_logs })
+                    }}>View Logs</Checkbox>
+                </div>
+
+
+                <Button
                     onClick={() => inviteUserMutation.mutate()}
-                    className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+                    variant="solid"
+                    color="primary"
                     disabled={inviteUserMutation.isPending}
                 >
                     {inviteUserMutation.isPending ? "Inviting..." : "Invite"}
-                </button>
-            </div>
+                </Button>
+            </div> : null}
 
             {/* Users List */}
-            <h3 className="font-semibold mt-6 mb-2">Users</h3>
             {loadingUsers ? <Loader2 size={16} className="animate-spin" /> : <ul className="border border-default rounded-lg divide-y divide-default">
                 {users?.map((u: any) => (
                     <li key={u?.id} className="p-4 flex justify-between items-center">
@@ -86,9 +140,25 @@ export default function ManageUsers() {
                             <div>
                                 <p className="font-medium">{u?.user?.name || u?.user?.email}</p>
                                 <p className="text-sm text-gray-500">{u?.role}</p>
-                                </div>
+                                {/* {"view_logs":true,"user_management":false,"view_ai_reviews":true} */}
+
+                                {u?.role === "ADMIN" ? null : <div className="mt-2 space-y-2">
+                                    {Object.keys(PERMISSIONS).map((key) => (
+                                        <label key={key} className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={u?.permissions?.[key as keyof typeof PERMISSIONS] || false}
+                                                className="form-checkbox text-primary"
+                                                onChange={() => { }}
+                                                disabled
+                                            />
+                                            <span>{PERMISSIONS[key as keyof typeof PERMISSIONS]}</span>
+                                        </label>
+                                    ))}
+                                </div>}
+                            </div>
                         </div>
-                        {u?.role !== "ADMIN" && (
+                        {u?.role !== "ADMIN" && LoggedInUser?.permissions?.user_management && (
                             <button
                                 onClick={() => removeUserMutation.mutate(u?.user?.id)}
                                 className="text-red-500 hover:underline"

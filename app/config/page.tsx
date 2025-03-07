@@ -9,12 +9,13 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { addToast } from "@heroui/toast";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
 
 export default function ReposPage() {
   const { data: session } = useSession();
-  if (!session) {
-    redirect("/");
-  }
+  // if (!session) {
+  //   redirect("/");
+  // }
 
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
 
@@ -28,7 +29,7 @@ export default function ReposPage() {
 
   const selectRepoMutation = useMutation({
     mutationFn: async (repo: any) => {
-      return axios.post("/api/repos/select", {
+      return axios.post("/api/repos/pick", {
         githubRepoId: repo.id,
         name: repo.name,
         owner: repo.owner.login,
@@ -40,14 +41,15 @@ export default function ReposPage() {
       addToast({
         title: "Success",
         description: "Repository has been selected successfully.",
-        color:'primary',
+        color: 'primary',
       });
+      redirect("/dashboard");
     },
     onError: () => {
       addToast({
         title: "Failed",
         description: "Failed to select repository.",
-        color:'danger',
+        color: 'danger',
       });
       setSelectedRepo(null);
     },
@@ -67,32 +69,44 @@ export default function ReposPage() {
         <Loader2 size={16} className="animate-spin" />
       ) : (
         <div>
-          <ul className="border rounded-lg divide-y border-default divide-default">
-            {repos?.length > 0 ? (
-              repos.map((repo: any) => (
-                <li key={repo.id} className="p-4 text-sm flex items-center justify-between">
-                  <div className="flex flex-col gap-2 items-start">
-                    <h2 className="text-lg font-bold">
-                      {repo.name}{" "}
-                      <Chip color={repo.private ? "danger" : "success"} size="sm">
-                        {repo.private ? "Private" : "Public"}
-                      </Chip>
-                    </h2>
-                    <span className="text-primary">{repo.language}</span>
+
+          <Select
+            isLoading={isLoading}
+            classNames={{
+              base: "max-w-xs",
+              trigger: "h-12",
+            }}
+            items={repos}
+            placeholder="Select a repository"
+            labelPlacement="outside"
+            onChange={(repo) => handleSelectRepo(repo)}
+            renderValue={(items) => {
+              return items.map((item) => (
+                <div key={item.key} className="flex items-center justify-between">
+                  <span className="font-semibold">{item.data.name}</span>
+                  <Chip color={item.data.private ? "danger" : "success"} size="sm">
+                    {item.data.private ? "Private" : "Public"}
+                  </Chip>
+                </div>
+              ));
+            }}
+          >
+            {(repo: any) => (
+              <SelectItem key={repo.id} textValue={repo.name}>
+                <div className="flex gap-2 items-center">
+                  <div className="flex justify-between w-full items-center">
+                    <div className="flex flex-col">
+                      <span className="text-small font-semibold">{repo.name}</span>
+                      <span className="text-primary">{repo.language}</span>
+                    </div>
+                    <Chip color={repo.private ? "danger" : "success"} size="sm">
+                      {repo.private ? "Private" : "Public"}
+                    </Chip>
                   </div>
-                  <Button
-                    onClick={() => handleSelectRepo(repo)}
-                    variant="flat"
-                    disabled={selectedRepo === repo.id || selectRepoMutation.isPending}
-                  >
-                    {selectedRepo === repo.id ? "Selected" : "Select"}
-                  </Button>
-                </li>
-              ))
-            ) : (
-              <p className="p-4 text-gray-500">No repositories found</p>
+                </div>
+              </SelectItem>
             )}
-          </ul>
+          </Select>
         </div>
       )}
     </>

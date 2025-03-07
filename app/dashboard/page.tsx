@@ -21,7 +21,7 @@ export default function Dashboard() {
     const { data: repos, isLoading, error } = useQuery({
         queryKey: ["selectedRepos"],
         queryFn: async () => {
-            const { data } = await axios.get("/api/repos/selected");
+            const { data } = await axios.get("/api/repos/picked");
             return data;
         },
     });
@@ -80,6 +80,7 @@ export default function Dashboard() {
                             onClick={() => handleConnectWebhook(repo.id, repo.workflowEnabled, repo.webhookId)}
                             className="mt-2"
                             variant={repo.workflowEnabled ? "flat" : "bordered"}
+                            color={repo.workflowEnabled ? "success" : "default"}
                             disabled={webhookMutation.isPending}
                         >
                             {repo.workflowEnabled ? "Connected" : "Connect"}
