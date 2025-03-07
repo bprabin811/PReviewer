@@ -34,10 +34,20 @@ export async function POST(req: Request, { params }: { params: Promise<{ repoId:
         }
 
         // Check if invited user exists
-        let invitedUser = await prisma.user.findUnique({ where: { email } });
+        let invitedUser = await prisma.user.findUnique({ where: { email },include: { accounts: true } });
         if (!invitedUser) {
             return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
         }
+
+        // Check if user has a GitHub account
+        // for (const contributor of repo?.contributors || []) {
+        //     if (contributor.id !== invitedUser.accounts.providerAccountId) {
+        //         return new Response(
+        //             JSON.stringify({ error: "User is not a contributor for this repo." }),
+        //             { status: 400 }
+        //         );
+        //     }
+        // }
 
         // Check if user is already added
         const existingAccess = await prisma.userRepositoryAccess.findFirst({

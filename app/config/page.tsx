@@ -43,7 +43,7 @@ export default function ReposPage() {
         description: "Repository has been selected successfully.",
         color: 'primary',
       });
-      redirect("/dashboard");
+      // redirect("/dashboard");
     },
     onError: () => {
       addToast({
@@ -55,13 +55,15 @@ export default function ReposPage() {
     },
   });
 
-  const handleSelectRepo = async (repo: any) => {
+  const handleSelectRepo = async (id: any) => {
     if (!window.confirm("Are you sure you want to select this repository?")) {
       return;
     }
-    setSelectedRepo(repo.id);
+    const repo = repos?.find((repo:any) => repo.id === parseInt(id));
+    setSelectedRepo(repo);
     selectRepoMutation.mutate(repo);
   };
+
 
   return (
     <>
@@ -79,7 +81,7 @@ export default function ReposPage() {
             items={repos}
             placeholder="Select a repository"
             labelPlacement="outside"
-            onChange={(repo) => handleSelectRepo(repo)}
+            onChange={(e) => handleSelectRepo(e.target.value)}
             renderValue={(items) => {
               return items.map((item) => (
                 <div key={item.key} className="flex items-center justify-between">

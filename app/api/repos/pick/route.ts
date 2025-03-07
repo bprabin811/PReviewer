@@ -24,10 +24,10 @@ export async function POST(req: Request): Promise<Response> {
     // Step 3: Find the account using the user ID
     const account = await prisma.account.findFirst({
       where: { userId: user.id },
-      select: { userId: true },
+      select: { userId: true ,access_token: true },
     });
 
-    if (!account || !account.userId) {
+    if (!account || !account.userId || !account.access_token) {
       return new Response(JSON.stringify({ error: "Account not found" }), { status: 404 });
     }
 
@@ -35,6 +35,15 @@ export async function POST(req: Request): Promise<Response> {
 
     // Step 4: Parse request body
     const { githubRepoId, name, owner, privateRepo, url } = await req.json();
+
+    // find contributos
+    const contributors = await fetch(`https://api.github.com/repos/${owner}/${name}/contributors`, {
+      headers: {
+        Authorization: `token ${account.access_token}`,
+        Accept: 'application/vnd.github+json',
+        "X-GitHub-Api-Version": "2022-11-28"
+      },
+    });
 
     // Step 5: Save repository in the database
     const repo = await prisma.repository.create({
@@ -51,6 +60,7 @@ export async function POST(req: Request): Promise<Response> {
             permissions: { view_logs: true, user_management: true, view_ai_reviews: true }, // Full permissions
           },
         },
+        contributors: await contributors.json(),
       },
     });
 

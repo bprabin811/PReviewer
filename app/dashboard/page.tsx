@@ -62,7 +62,6 @@ export default function Dashboard() {
         webhookMutation.mutate({ repoId, workflowEnabled, webhookId });
     }
 
-
     return (
         <>
             {error && <p className="text-red-500">{error.message}</p>}
@@ -76,7 +75,7 @@ export default function Dashboard() {
                             <h3 className="font-semibold text-primary">{repo.name}</h3>
                         </Link>
                         <p className="text-sm text-gray-500">{repo.owner}</p>
-                        <Button
+                        {repo?.users?.find((u: any) => u.user.email === session?.user?.email && u.role === "ADMIN") ? <Button
                             onClick={() => handleConnectWebhook(repo.id, repo.workflowEnabled, repo.webhookId)}
                             className="mt-2"
                             variant={repo.workflowEnabled ? "flat" : "bordered"}
@@ -84,7 +83,7 @@ export default function Dashboard() {
                             disabled={webhookMutation.isPending}
                         >
                             {repo.workflowEnabled ? "Connected" : "Connect"}
-                        </Button>
+                        </Button> : null}
                     </Card>
                 ))) : <p className="text-gray-500">No repositories found, get started by selecting repository from config.</p>}
             </div>
