@@ -70,7 +70,7 @@ export const Navbar = () => {
           </Link>
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden md:flex">
+        {/* <NavbarItem className="hidden md:flex">
           <Button
             isExternal
             as={Link}
@@ -81,7 +81,7 @@ export const Navbar = () => {
           >
             Sponsor
           </Button>
-        </NavbarItem>
+        </NavbarItem> */}
         {session ? (
           <Popover placement="bottom-end">
             <PopoverTrigger>
