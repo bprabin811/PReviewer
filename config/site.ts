@@ -24,7 +24,7 @@ export const siteConfig = {
     }
   ],
   links: {
-    github: "https://github.com/ultroxium",
-    twitter: "https://twitter.com/ultroxium",
+    github: "https://github.com/bprabin811",
+    twitter: "https://twitter.com/",
   },
 };

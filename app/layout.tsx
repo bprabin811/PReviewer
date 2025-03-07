@@ -51,7 +51,7 @@ export default function RootLayout({
             {children}
             </main>
             <footer className="w-full flex items-center justify-center py-3">
-              <span>Made with ❤️.{" "} {new Date().getFullYear()}</span>
+              <span>Prabin Bhatt ❤️{" "} {new Date().getFullYear()}</span>
             </footer>
           </div>
           </AuthProvider>
