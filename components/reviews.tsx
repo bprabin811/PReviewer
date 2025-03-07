@@ -1,6 +1,7 @@
 import { Avatar } from "@heroui/avatar";
 import { Chip } from "@heroui/chip";
 import { subtitle, title } from "./primitives";
+import Link from "next/link";
 
 export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
     return (
@@ -20,7 +21,7 @@ export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <h1 className={title()}>{`#${pr.pullId}`}</h1>
+                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`}><h1 className={title()}>{`#${pr.pullId}`}</h1></Link>
                                 <Chip color={pr.status === "CLOSED" ? "danger" : "primary"} size="sm">{pr.status}</Chip>
                             </div>
 

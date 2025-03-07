@@ -13,7 +13,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ repoId: 
 
         const pullRequests = await prisma.pullRequest.findMany({
             where: { repositoryId: repoId },
-            include: { user: true, reviews: true },
+            include: { user: true, reviews: true,repository:true },
             orderBy: { createdAt: "desc" },
         });
 
