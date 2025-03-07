@@ -49,7 +49,7 @@ export async function POST(req: Request) {
                 const pullReqData = await prisma.pullRequest.upsert({
                     where: { githubPRId: pull_request.id.toString() },
                     update: {
-                        status: action === "closed" ? "CLOSED" : "OPEN",
+                        status: (pull_request.merged && action === "closed") ? "MERGED" : action === "closed" ? "CLOSED" : "OPEN",
                         title: pull_request.title,
                         description: pull_request.body || "",
                         updatedAt: new Date(),
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
                         githubPRId: pull_request.id.toString(),
                         title: pull_request.title,
                         description: pull_request.body || "",
-                        status: action === "closed" ? "CLOSED" : "OPEN",
+                        status: (pull_request.merged && action === "closed") ? "MERGED" : action === "closed" ? "CLOSED" : "OPEN",
                         repositoryId: repo.id,
                         userId: user.id,
                         pullId: pull_request.number,

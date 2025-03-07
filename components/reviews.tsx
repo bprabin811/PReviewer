@@ -21,7 +21,7 @@ export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`}><h1 className={title()}>{`#${pr.pullId}`}</h1></Link>
+                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`}><h1 className={`${title()} text-primary`}>{`#${pr.pullId}`}</h1></Link>
                                 <Chip color={pr.status === "CLOSED" ? "danger" : "primary"} size="sm">{pr.status}</Chip>
                             </div>
 
