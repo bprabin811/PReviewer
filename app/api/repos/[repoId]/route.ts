@@ -32,3 +32,24 @@ export async function GET(req: Request, { params }: { params: Promise<{ repoId: 
         return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
     }
 }
+
+
+export async function DELETE(req: Request, { params }: { params: Promise<{ repoId: string }> }) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session?.user?.email) {
+            return new Response("Unauthorized", { status: 401 });
+        }
+
+        const { repoId } = await params;
+
+        const repo = await prisma.repository.delete({
+            where: { id: repoId },
+        });
+
+        return Response.json(repo);
+    } catch (error) {
+        console.error(error);
+        return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+    }
+}

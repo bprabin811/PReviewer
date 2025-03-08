@@ -5,10 +5,11 @@ import { title } from "@/components/primitives";
 import ReviewPage from "@/components/reviews";
 import { Avatar, AvatarGroup } from "@heroui/avatar";
 import { Card } from "@heroui/card";
+import { Spinner } from "@heroui/spinner";
 import { Tab, Tabs } from "@heroui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
+import { CrossIcon, Loader2, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
@@ -68,15 +69,21 @@ export default function RepoDetails() {
                                 <Avatar key={user?.id} src={user?.user?.image} alt={user?.user?.name} size="sm" />
                             ))}
                         </AvatarGroup>
-                        <p className="text-sm">
-                            Action:{" "}
-                            <span className={repo.workflowEnabled ? "text-green-600" : "text-red-600"}>
-                                {repo.workflowEnabled ? "Enabled" : "Disabled"}
-                            </span>
-                        </p>
-                        <Link href={`/repos/${repoId}/users`} className="text-blue-600 hover:underline">
-                            Manage Users
-                        </Link>
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-col space-y-2">
+                                <p className="text-sm">
+                                    Action:{" "}
+                                    <span className={repo.workflowEnabled ? "text-green-600" : "text-red-600"}>
+                                        {repo.workflowEnabled ? "Enabled" : "Disabled"}
+                                    </span>
+                                </p>
+                                <Link href={`/repos/${repoId}/users`} className="text-blue-600 hover:underline">
+                                    Manage Users
+                                </Link>
+                            </div>
+                            {repo.workflowEnabled ? <Spinner classNames={{ label: "text-foreground mt-4" }} variant="dots" color="success" /> : <X className="text-red-600" size={24} />}
+
+                        </div>
                     </Card>
 
                     <Tabs aria-label="Options">

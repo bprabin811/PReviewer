@@ -5,7 +5,7 @@ import { Card } from "@heroui/card";
 import { addToast } from "@heroui/toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
+import { Loader2, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -46,10 +46,32 @@ export default function Dashboard() {
             });
             queryClient.invalidateQueries({ queryKey: ["selectedRepos"] });
         },
-        onError: (error:any) => {
+        onError: (error: any) => {
             addToast({
                 title: "Failed",
                 description: error.response.data.error || "Failed to connect repository.",
+                color: 'danger',
+            });
+        }
+    });
+
+
+    const removeRepoMutation = useMutation({
+        mutationFn: async (repoId: string) => {
+            await axios.delete(`/api/repos/${repoId}/`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["selectedRepos"] });
+            addToast({
+                title: "Success",
+                description: "Repo removed successfully.",
+                color: 'success',
+            })
+        },
+        onError: (error: any) => {
+            addToast({
+                title: "Failed",
+                description: error.response.data.error || "Failed to remove repo.",
                 color: 'danger',
             });
         }
@@ -70,7 +92,7 @@ export default function Dashboard() {
             {/* Repository List */}
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {!isLoading && repos?.length > 0 ? (repos?.map((repo: any) => (
-                    <Card className="p-4" key={repo.id}>
+                    <Card className="p-4 relative" key={repo.id}>
                         <Link key={repo.id} href={`/repos/${repo.id}`} className="block underline underline-offset-4">
                             <h3 className="font-semibold text-primary">{repo.name}</h3>
                         </Link>
@@ -83,6 +105,15 @@ export default function Dashboard() {
                             disabled={webhookMutation.isPending}
                         >
                             {repo.workflowEnabled ? "Connected" : "Connect"}
+                        </Button> : null}
+
+                        {repo?.users?.find((u: any) => u.user.email === session?.user?.email && u.role === "ADMIN") ? <Button className="absolute right-4 top-4" size="sm" variant="light" color="danger" onClick={() => {
+                            if (!window.confirm("Are you sure you want to remove this repository?")) {
+                                return;
+                            }
+                            removeRepoMutation.mutate(repo.id);
+                        }}>
+                            <TrashIcon size={16} />
                         </Button> : null}
                     </Card>
                 ))) : <p className="text-gray-500">No repositories found, get started by selecting repository from config.</p>}
