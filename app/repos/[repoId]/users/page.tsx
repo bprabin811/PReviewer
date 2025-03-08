@@ -53,10 +53,10 @@ export default function ManageUsers() {
                 color: 'success',
             });
         },
-        onError: () => {
+        onError: (error:any) => {
             addToast({
                 title: "Failed",
-                description: "Failed to invite user.",
+                description: error.response.data.error || "Failed to invite user.",
                 color: 'danger',
             });
         }
@@ -68,7 +68,19 @@ export default function ManageUsers() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["repoUsers", repoId] });
+            addToast({
+                title:"Success",
+                description:"User removed successfully.",
+                color: 'success',
+            })
         },
+        onError:(error:any) =>{
+            addToast({
+                title: "Failed",
+                description: error.response.data.error || "Failed to remove user.",
+                color: 'danger',
+            });
+        }
     });
 
     const roles = [

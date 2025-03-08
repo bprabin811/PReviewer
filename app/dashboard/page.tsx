@@ -46,10 +46,10 @@ export default function Dashboard() {
             });
             queryClient.invalidateQueries({ queryKey: ["selectedRepos"] });
         },
-        onError: () => {
+        onError: (error:any) => {
             addToast({
                 title: "Failed",
-                description: "Failed to connect repository.",
+                description: error.response.data.error || "Failed to connect repository.",
                 color: 'danger',
             });
         }

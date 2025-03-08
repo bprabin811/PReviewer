@@ -36,6 +36,15 @@ export async function POST(req: Request): Promise<Response> {
     // Step 4: Parse request body
     const { githubRepoId, name, owner, privateRepo, url } = await req.json();
 
+    //check already selected
+    const existingRepo = await prisma.repository.findFirst({
+      where: { githubRepoId: `${githubRepoId}` },
+    });
+
+    if (existingRepo) {
+      return new Response(JSON.stringify({ error: "Repository already selected" }), { status: 400 });
+    }
+
     // find contributos
     const contributors = await fetch(`https://api.github.com/repos/${owner}/${name}/contributors`, {
       headers: {

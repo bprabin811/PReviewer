@@ -45,10 +45,10 @@ export default function ReposPage() {
       });
       // redirect("/dashboard");
     },
-    onError: () => {
+    onError: (error:any) => {
       addToast({
         title: "Failed",
-        description: "Failed to select repository.",
+        description: error.response.data.error || "Failed to select repository.",
         color: 'danger',
       });
       setSelectedRepo(null);
