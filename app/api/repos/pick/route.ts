@@ -60,17 +60,16 @@ export async function POST(req: Request): Promise<Response> {
             permissions: { view_logs: true, user_management: true, view_ai_reviews: true }, // Full permissions
           },
         },//want to save id and login of contributors
-        contributors: {
-          create: contributors.map((contributor: any) => {
-            return {
-              id: contributor.id,
-              login: contributor.login,
-            }
+        contributors: contributors.map((contributor: any) => {
+          return {
+            id: contributor.id,
+            login: contributor.login,
           }
-          )
         }
-      },
-    });
+        )
+      }
+    },
+    );
 
     // Step 6: Log the action
     await prisma.log.create({
