@@ -24,7 +24,7 @@ export async function POST(req: Request): Promise<Response> {
     // Step 3: Find the account using the user ID
     const account = await prisma.account.findFirst({
       where: { userId: user.id },
-      select: { userId: true ,access_token: true },
+      select: { userId: true, access_token: true },
     });
 
     if (!account || !account.userId || !account.access_token) {
@@ -43,7 +43,7 @@ export async function POST(req: Request): Promise<Response> {
         Accept: 'application/vnd.github+json',
         "X-GitHub-Api-Version": "2022-11-28"
       },
-    });
+    }).then((res) => res.json());
 
     // Step 5: Save repository in the database
     const repo = await prisma.repository.create({
@@ -59,8 +59,16 @@ export async function POST(req: Request): Promise<Response> {
             role: "ADMIN", // Assign user as ADMIN
             permissions: { view_logs: true, user_management: true, view_ai_reviews: true }, // Full permissions
           },
-        },
-        contributors: await contributors.json(),
+        },//want to save id and login of contributors
+        contributors: {
+          create: contributors.map((contributor: any) => {
+            return {
+              id: contributor.id,
+              login: contributor.login,
+            }
+          }
+          )
+        }
       },
     });
 
