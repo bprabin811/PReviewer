@@ -1,9 +1,8 @@
 ## [https://gitpr-reviewer.vercel.app](https://gitpr-reviewer.vercel.app)
----
+
 <a href="https://gitpr-reviewer.vercel.app" target="_blank">
     <img src="public/banner.png" alt="bg"></img>
 </a>
----
 
 ## PReviewer
 PReviewer is a tool designed to streamline the code review process by providing automated feedback on pull requests.
