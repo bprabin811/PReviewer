@@ -14,7 +14,7 @@ export const  Footer =() => {
     ];
     return (
         <footer className="border-t mt-4 border-default">
-            <div className="container mx-auto px-4 py-4 max-w-7xl">
+            <div className="container mx-auto px-6 py-4 max-w-7xl">
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
                     <div className="flex flex-col items-start">
                         <div className="flex items-center gap-4 mb-4">
