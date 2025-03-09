@@ -63,21 +63,13 @@ class Utils {
         return diffText;
     }
 
-    async AIReview(prompt:any, repositoryId: any, pullRequestId: any) {
+    async AIReview(prompt:any, repositoryId: any, pullRequestId: any,system_prompt: any) {
         await this.ensureInitialized();
         const apiKey = process.env.GEMINI_API_KEY;
         const genAI = new GoogleGenerativeAI(apiKey || "");
         const model = await genAI.getGenerativeModel({
             model: "gemini-2.0-flash",
-            systemInstruction: `You are an experienced code reviewer. Your task is to analyze a pull request (PR) diff and provide feedback. 
-            The diff represents changes to a repository's code. Please provide very summarized feedback not more than 100 words on the following aspects:
-                - Code quality
-                - Clarity and readability
-                - Best practices
-                - Potential issues or bugs
-                - Suggestions for improvement
-          
-                The following is the PR diff:`
+            systemInstruction: system_prompt,
           });
           const generationConfig = {
             temperature: 0.7,

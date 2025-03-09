@@ -75,6 +75,27 @@ export async function POST(req: Request): Promise<Response> {
             login: contributor.login,
           }
         }
+        config:{
+          system_prompt:`You are an experienced code reviewer. Your task is to analyze a pull request (PR) diff and provide feedback. 
+            The diff represents changes to a repository's code. Please provide very summarized feedback not more than 100 words on the following aspects:
+                - Code quality
+                - Clarity and readability
+                - Best practices
+                - Potential issues or bugs
+                - Suggestions for improvement
+          
+                The following is the PR diff:`,
+          rules:{
+            "code_quality":true,
+            "clarity_readability":true,
+            "best_practices":true,
+            "potential_issues_or_bugs":true,
+            "suggestions-for_improvement":true
+          },
+          permissions:{
+            "file_diff":true,
+          }
+        }
         )
       }
     },
