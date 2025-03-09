@@ -8,6 +8,7 @@ import AuthProvider from "@/components/authProvider";
 import { Navbar } from "@/components/navbar";
 import { poppins } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
+import { Footer } from "@/components/footer";
 
 
 
@@ -50,9 +51,7 @@ export default function RootLayout({
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
             {children}
             </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <span>Prabin Bhatt ❤️{" "} {new Date().getFullYear()}</span>
-            </footer>
+            <Footer/>
           </div>
           </AuthProvider>
         </Providers>

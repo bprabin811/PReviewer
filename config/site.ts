@@ -23,6 +23,13 @@ export const siteConfig = {
       href: "/config",
     }
   ],
+  owner: "Prabin Bhatt",
+  owner_url: "https://prabinbhatt.com.np",
+  social_urls: {
+    github: "https://github.com/bprabin811",
+    twitter: "https://x.com/@ProWin32289620",
+    linkedin: "https://www.instagram.com/pro_win811"
+  },
   links: {
     github: "https://github.com/bprabin811/PReviewer",
     twitter: "https://twitter.com/",

@@ -18,18 +18,29 @@ import NextLink from "next/link";
 
 import {
   GithubIcon,
-  HeartFilledIcon,
   Logo
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Avatar } from "@heroui/avatar";
-import { LogOutIcon, Star } from "lucide-react";
+import { Github, LogOutIcon, Star } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export const Navbar = () => {
 
   const { data: session } = useSession();
+
+  const { data: stars, isLoading, error } = useQuery({
+    queryKey: ["stars"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/stars");
+      return data;
+    },
+  });
+
+
 
   return (
     <HeroUINavbar maxWidth="xl" position="sticky" className="border-b border-default-200">
@@ -63,8 +74,8 @@ export const Navbar = () => {
       >
         <NavbarItem className="hidden sm:flex gap-4">
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <Button size="md" variant="bordered" className="rounded-full">
-            <Star className="text-default-500" size={16}/> Github
+            <Button size="md" variant="shadow" className="rounded-full">
+              <Github size={16} /> Star on Github <Star className="text-default-500" size={16} /> {stars?.stars}
             </Button>
           </Link>
           <ThemeSwitch />
