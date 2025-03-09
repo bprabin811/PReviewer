@@ -111,6 +111,14 @@ export default function Dashboard() {
                             if (!window.confirm("Are you sure you want to remove this repository?")) {
                                 return;
                             }
+                            if (repo.workflowEnabled) {
+                                addToast({
+                                    title: "Failed",
+                                    description: "Disconnect the repository first.",
+                                    color: 'danger',
+                                });
+                                return;
+                            }
                             removeRepoMutation.mutate(repo.id);
                         }}>
                             <TrashIcon size={16} />
