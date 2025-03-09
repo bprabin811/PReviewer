@@ -34,12 +34,15 @@ export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
                             {pr.reviews?.length > 0 && (
                                 <div className="mt-2 border-t pt-2 border-default">
                                     <h4 className="text-sm font-semibold">Comments</h4>
-                                    <ul className="mt-2 space-y-2">
-                                        {pr.reviews.map((rev: any, index: number) => (
-                                            <li key={index} className="ml-6 border-l-2 border-default pl-2">                                                
-                                                <ReactMarkdown >{rev.comments}</ReactMarkdown>
+                                    <ul className="mt-2 space-y-6">
+                                        {pr.reviews.slice().reverse().map((rev: any, index: number) => (
+                                            <li key={index} className=" border-l-8 p-4 rounded-lg border-default border-l-primary-100">
+                                                <h3 className={`${subtitle()} text-green-600`}>Comment #{index+1}</h3>
+                                                <p className="font-medium underline text-default-400">{new Date(rev.createdAt).toLocaleString()}</p>
+                                                <ReactMarkdown>{rev.comments}</ReactMarkdown>
                                             </li>
                                         ))}
+
                                     </ul>
                                 </div>
                             )}
