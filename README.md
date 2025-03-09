@@ -1,6 +1,15 @@
 ## PReviewer
 PReviewer is a tool designed to streamline the code review process by providing automated feedback on pull requests.
 
+## Features
+
+- **Automated Code Review**: Provides automated feedback on pull requests to ensure code quality and consistency.
+- **Customizable Rules**: Define custom rules to enforce your team’s coding standards.
+- **Easy Integration**: Integrates seamlessly with GitHub automatically review pull requests.
+- **Detailed Feedback**: Offers clear, actionable feedback on code style, potential bugs, and performance issues.
+- **Scalability**: Works efficiently with projects of all sizes, from small teams to large organizations.
+- **Continuous Improvement**: Regular updates with new features, rule sets, and bug fixes.
+
 ---
 
 ## Contribution Guide
