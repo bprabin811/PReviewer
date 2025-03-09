@@ -98,7 +98,7 @@ export async function POST(req: Request) {
                 if (action === "opened" || action === "synchronize" || action === "reopened") {
                     const utils = new Utils(user.email || "");
                     const diff = await utils.getDiff(prData);
-                    const review = await utils.AIReview(diff, repo.id, PRID, repo?.config?.system_prompt);
+                    const review = await utils.AIReview(diff, repo.id, PRID, (repo?.config as any)?.system_prompt);
                     await utils.commentOnPR(prData, review);
                 }
 
