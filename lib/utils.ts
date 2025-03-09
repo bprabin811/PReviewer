@@ -63,13 +63,27 @@ class Utils {
         return diffText;
     }
 
-    async AIReview(prompt:any, repositoryId: any, pullRequestId: any,system_prompt: any) {
+    async AIReview(prompt:any, repositoryId: any, pullRequestId: any,config: any) {
         await this.ensureInitialized();
         const apiKey = process.env.GEMINI_API_KEY;
         const genAI = new GoogleGenerativeAI(apiKey || "");
+
+        const review_aspects = `
+        ${config?.rules?.code_quality ? "- Code Quality" : ""}
+        ${config?.rules?.clarity_readability ? "- Clarity and readability" : ""}
+        ${config?.rules?.best_practices ? "- Best practices" : ""}
+        ${config?.rules?.potential_issues_or_bugs ? "- Potential issues or bugs" : ""}
+        ${config?.rules?.suggestions_for_improvement ? "- Suggestions for improvement" : ""}
+        `
+
         const model = await genAI.getGenerativeModel({
             model: "gemini-2.0-flash",
-            systemInstruction: system_prompt,
+            systemInstruction: `
+            ${config?.system_prompt}
+            Review aspects:
+            ${review_aspects}
+            The following is the PR diff:
+            `,
           });
           const generationConfig = {
             temperature: 0.7,

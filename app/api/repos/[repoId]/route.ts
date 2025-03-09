@@ -53,3 +53,28 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ repoI
         return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
     }
 }
+
+//update repo
+export async function PUT(req: Request, { params }: { params: Promise<{ repoId: string }> }) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session?.user?.email) {
+            return new Response("Unauthorized", { status: 401 });
+        }
+
+        const { repoId } = await params;
+        const { config } = await req.json();
+
+        const repo = await prisma.repository.update({
+            where: { id: repoId },
+            data: {
+                config,
+            },
+        });
+
+        return Response.json(repo);
+    } catch (error) {
+        console.error(error);
+        return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+    }
+}
