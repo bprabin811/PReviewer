@@ -3,6 +3,8 @@ import { Chip } from "@heroui/chip";
 import { subtitle, title } from "./primitives";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+
 
 export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
     return (
@@ -22,7 +24,7 @@ export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`}><h1 className={`${title()} text-green-600`}>{`#${pr.pullId}`}</h1></Link>
+                                <Link href={`https://github.com/${pr?.repository?.owner}/${pr?.repository?.name}/pull/${pr?.pullId}`} target="_blank"><h1 className={`${title()} text-green-600`}>{`#${pr.pullId}`}</h1></Link>
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-4"><Chip color='default' size="sm">{pr?.metadata?.base}</Chip><ArrowLeft size={16} /><Chip color='default' size="sm">{pr?.metadata?.head}</Chip></div>
                                     <div className="flex items-center gap-4"><Chip color={pr.status === "CLOSED" ? "danger" : "primary"} size="sm">{pr.status}</Chip> {pr.status === "MERGED" ? `by ${pr?.metadata?.merged_by?.login}` : ''}</div>
@@ -34,8 +36,8 @@ export default function ReviewPage({ pullRequests }: { pullRequests: any[] }) {
                                     <h4 className="text-sm font-semibold">Comments</h4>
                                     <ul className="mt-2 space-y-2">
                                         {pr.reviews.map((rev: any, index: number) => (
-                                            <li key={index} className="ml-6 border-l-2 border-default pl-2">
-                                                <p className="text-default-400"><strong>{rev.reviewer}</strong>{rev.comments}</p>
+                                            <li key={index} className="ml-6 border-l-2 border-default pl-2">                                                
+                                                <ReactMarkdown >{rev.comments}</ReactMarkdown>
                                             </li>
                                         ))}
                                     </ul>
