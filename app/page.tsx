@@ -38,20 +38,23 @@ export default function Home() {
           <Button color="primary" variant="flat" onPress={() => signIn()}>
             Get Started
           </Button>
-          <Button color="default" variant="ghost" onPress={() => { }}>
+          <Button color="default" variant="ghost" onPress={() => {
+            window.open("/demo.webm", "_blank");
+          }}>
             Watch Demo
           </Button>
+
         </div>
 
 
         <Code size="md" className="px-4 py-2 rounded-full flex items-center gap-4 mt-8">
-      $ npx previewer-cli@latest init
-      {copied ? (
-        <Check size={16} className="text-green-500" />
-      ) : (
-        <Copy size={16} className="cursor-pointer" onClick={handleCopy} />
-      )}
-    </Code>
+          $ npx previewer-cli@latest init
+          {copied ? (
+            <Check size={16} className="text-green-500" />
+          ) : (
+            <Copy size={16} className="cursor-pointer" onClick={handleCopy} />
+          )}
+        </Code>
       </div>
     </section>
   );
